@@ -7,7 +7,7 @@ import httpx
 
 
 class OllamaClient:
-    def __init__(self, model: str = "qwen3.5:2b", base_url: str = "http://127.0.0.1:11434"):
+    def __init__(self, model: str = "qwen3.5:4b", base_url: str = "http://127.0.0.1:11434"):
         self.model = model
         self.base_url = base_url.rstrip("/")
 
@@ -29,13 +29,3 @@ class OllamaClient:
             except Exception as e:
                 last_exc = e
         raise RuntimeError(f"Ollama generate failed after {retries + 1} attempts") from last_exc
-
-    def embed(self, text: str) -> list[float]:
-        """Get text embedding via Ollama."""
-        resp = httpx.post(
-            f"{self.base_url}/api/embed",
-            json={"model": self.model, "input": text},
-            timeout=30.0,
-        )
-        resp.raise_for_status()
-        return resp.json()["embeddings"][0]
